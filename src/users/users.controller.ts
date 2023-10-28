@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('auth')
 export class UsersController {
@@ -11,9 +12,14 @@ export class UsersController {
     this.usersService.create(body.email, body.password);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('/:id')
   public findUser(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    const user = this.usersService.findOne(+id);
+    if(!user) {
+      throw new NotFoundException('there is no user')
+    }
+    return user;
   }
 
   @Get()
@@ -24,5 +30,10 @@ export class UsersController {
   @Delete('/:id')
   public deleteUser(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Patch('/:id')
+  public updateUser(@Param() id: string, @Body() body: UpdateUserDto) {
+    return this.usersService.update(+id, body)
   }
 }
