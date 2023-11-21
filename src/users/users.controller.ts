@@ -18,7 +18,7 @@ import { UserDto } from './dtos/user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
 import { User } from './user.entity';
-import { CurentUser } from './decorators/current-user.decorator';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 
 @Controller('auth')
@@ -31,7 +31,7 @@ export class UsersController {
 
   @Get('/whoami')
   @UseGuards(AuthService)
-  public whoAmI(@CurentUser() user: User) {
+  public whoAmI(@CurrentUser() user: User) {
     return user;
   }
 
