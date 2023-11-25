@@ -1,0 +1,12 @@
+import { DataSource } from "typeorm";
+
+export const sqliteDataSource = new DataSource ({
+  type: 'sqlite',
+  database: 'db.sqlite',
+  entities: process.env.NODE_ENV === 'development' ? ['**/*.entity.js'] : ['**/*.entity.ts'],
+  synchronize: false,
+  migrations: ['migrations/*.js'],
+  cli: {
+    migrationsDir: 'migrations'
+  }
+});
